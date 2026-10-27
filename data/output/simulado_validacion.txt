@@ -1,0 +1,75 @@
+== Rangos ==
+                       mean   std   min    max
+study_hours             4.5   2.3   0.0   12.0
+attendance             78.0  17.6   8.0  100.0
+sleep_hours             7.0   1.1   4.0   10.0
+internet_usage          5.1   2.4   0.0   12.0
+assignments_completed  11.8   5.2   0.0   20.0
+previous_score         66.2  11.3  22.0  100.0
+exam_score             62.4  16.4   0.0  100.0
+Filas que violan la regla de 24 hs: 0
+
+== Correlación con exam_score ==
+study_hours              0.57
+attendance               0.60
+sleep_hours              0.29
+internet_usage          -0.48
+assignments_completed    0.66
+previous_score           0.56
+
+== Correlaciones entre entradas ==
+                       study_hours  attendance  ...  previous_score  sleep_hours
+study_hours                   1.00        0.46  ...            0.29         0.18
+attendance                    0.46        1.00  ...            0.40         0.30
+internet_usage               -0.39       -0.44  ...           -0.23        -0.43
+assignments_completed         0.52        0.65  ...            0.40         0.34
+previous_score                0.29        0.40  ...            1.00         0.16
+sleep_hours                   0.18        0.30  ...            0.16         1.00
+
+[6 rows x 6 columns]
+
+== Histograma de exam_score (10 bins) ==
+exam_score
+(-0.001, 10.0]     0.1
+(10.0, 20.0]       0.4
+(20.0, 30.0]       2.2
+(30.0, 40.0]       6.8
+(40.0, 50.0]      14.3
+(50.0, 60.0]      21.4
+(60.0, 70.0]      22.7
+(70.0, 80.0]      18.4
+(80.0, 90.0]       9.5
+(90.0, 100.0]      4.2
+exam_score == 100: 0.9%
+exam_score
+Regular (6-8)          41.1
+Recuperatorio (4-6)    35.8
+Promoción (>8)         13.7
+Riesgo (<4)             9.5
+placement_status
+Placed        0.705
+Not Placed    0.295
+
+== EM sobre las 5 entradas crudas (80% train) ==
+ K  log_likelihood      BIC      AIC  convergio
+ 2       -117665.0 235698.0 235412.0       True
+ 3       -117114.0 234786.0 234353.0       True
+ 4       -116900.0 234545.0 233965.0       True
+ 5       -116746.0 234427.0 233700.0       True
+ 6       -116714.0 234551.0 233678.0       True
+ 7       -116617.0 234547.0 233527.0       True
+ 8       -116616.0 234732.0 233565.0       True
+Métricas K=4: {'K': 4, 'log_likelihood': -116899.692, 'BIC': 234545.321, 'AIC': 233965.384, 'silhouette': 0.194, 'entropia_responsabilidades': 0.482}
+ARI clusters vs perfil latente: 0.20
+Varianza de la nota explicada por los clusters: 40%
+perfil_latente  comprometido  desenganchado  distraido  regular
+row_0                                                          
+0                        273            113        631     1603
+1                          0            585        427       54
+2                       1258              2         38      855
+3                         24            530        905      702
+   mean   std  size
+0  64.6  12.4  2620
+1  44.3  12.6  1066
+2  76.0  12.5  2153
+3  55.1  13.3  2161

@@ -1,0 +1,8 @@
+variable,rol,tipo,min,max,escalar_a_100,binning,descripcion
+study_hours,entrada,horas,0,24,no,horas,Horas diarias de estudio
+attendance,entrada,porcentaje,0,100,no,uniforme,Porcentaje de asistencia a clases
+internet_usage,entrada,horas,0,24,no,horas,Horas diarias de uso de internet
+assignments_completed,entrada,conteo,0,20,si,uniforme,Tareas completadas (total del dataset)
+previous_score,entrada,nota,0,100,no,uniforme,Nota previa en materias equivalentes
+sleep_hours,control,horas,0,24,no,ninguno,Horas de sueño (solo chequeo de 24 hs)
+exam_score,objetivo,nota,0,100,no,ninguno,Nota del examen (no entra a la red)

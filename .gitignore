@@ -1,0 +1,29 @@
+# Entornos virtuales
+venv/
+venv_*/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Material pesado de referencia (no se versiona)
+Lau.*.pdf
+*.zip
+Student Performance Prediction Dataset/
+
+# Salidas generadas
+data/processed/*.csv
+data/output/*.csv
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Archivos temporales de Office
+~$*
