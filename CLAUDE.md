@@ -23,7 +23,7 @@ Docentes: Dra. Daniela López De Luise, Prof. Alejandro Pérez. UADER, FCyT, IDT
 
 ## Documentos de referencia
 
-- `docs/Arquitectura_EM_ART1_TFI (2).docx` y `docs/especificacion_arquitectura_em_art1.md`: arquitectura,
+- `docs/Arquitectura_EM_ART1_TFI.docx` y `docs/especificacion_arquitectura_em_art1.md`: arquitectura,
   fórmulas, backlog (ISSUE-101 a 403) y plan de verificación.
 - `1er-avance-TPF.pdf`: primera entrega (tiene partes ya corregidas, ver abajo).
 - `TPF.2026.Trabajo integrador_v1.pdf`: consigna.
