@@ -73,7 +73,7 @@ flowchart TD
 
 ```
 CarGross.py        punto de entrada CLI (en desarrollo)
-src/               preprocessor, em_clustering, encoder, art1, predictor
+src/               preprocessor, em_clustering, encoder, art1, predictor, metrics, barrido_rho
 scripts/           generar y validar el dataset simulado
 tests/             tests con pytest
 data/              raw (dataset), metadata (reglas de cada variable), output (resultados)
@@ -89,7 +89,11 @@ pip install -r requirements.txt
 python -m pytest
 python scripts/validar_dataset_simulado.py
 python -m src.barrido_rho
+python -m src.metrics
 ```
+
+`python -m src.metrics` corre el pipeline con ρ = 0,65 y guarda las predicciones por alumno en
+`data/output/predicciones_student.csv` y el resumen en `data/output/metricas_student.csv`.
 
 El detalle completo está en `docs/Informe_avance_TFI.docx` y
 `docs/especificacion_arquitectura_em_art1.md`.

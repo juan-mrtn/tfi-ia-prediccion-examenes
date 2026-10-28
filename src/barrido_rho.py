@@ -15,7 +15,7 @@ import pandas as pd
 
 from src.art1 import CarpenterGrossbergNetwork
 from src.em_clustering import EMClusterer, academic_weights
-from src.encoder import PositionalBinaryEncoder
+from src.metrics import binarizar, exactitud_categoria, mae, pureza, tasa_compresion, tasa_resets
 from src.predictor import ExamPredictor, score_to_category
 from src.preprocessor import DataPreprocessor
 
@@ -47,22 +47,6 @@ def clases_em(prep, entrenamiento):
     return np.array([categorias[g] for g in grupos])
 
 
-def binarizar(prep, tabla):
-    """Escala las tareas a 100 y convierte cada alumno en un vector de 20 bits."""
-    escalada = prep.scale_to_base_100_int(tabla)
-    encoder = PositionalBinaryEncoder(prep.metadata_df["binning"].to_dict())
-    X, _ = encoder.fit_transform(escalada, prep.feature_cols)
-    return X
-
-
-def pureza(nodos, categorias):
-    """Proporción de alumnos que comparten la categoría EM mayoritaria de su nodo."""
-    tabla = pd.DataFrame({"nodo": nodos, "categoria": categorias})
-    tabla = tabla[tabla["nodo"] >= 0]
-    mayoritarios = tabla.groupby("nodo")["categoria"].agg(lambda c: c.value_counts().iloc[0])
-    return mayoritarios.sum() / len(tabla)
-
-
 def evaluar_rho(rho, X_train, X_test, cat_train, nota_train, nota_test):
     """Entrena ART 1 con un ρ y devuelve sus métricas, o None si crea demasiados nodos."""
     red = CarpenterGrossbergNetwork(X_train.shape[1], max_categories=MAX_NODOS, rho=rho)
@@ -82,12 +66,12 @@ def evaluar_rho(rho, X_train, X_test, cat_train, nota_train, nota_test):
     return {
         "rho": rho,
         "clusters": red.num_active_clusters,
-        "CR": round(red.num_active_clusters / n_train, 4),
-        "RR": round(red.total_resets / n_train, 2),
+        "CR": round(tasa_compresion(red.num_active_clusters, n_train), 4),
+        "RR": round(tasa_resets(red.total_resets, n_train), 2),
         "vacios_train": int((X_train.sum(axis=1) == 0).sum()),
         "pureza_EM": round(pureza(nodos, cat_train), 3),
-        "MAE": round(np.abs(pred["nota_esperada"].values - nota_test).mean(), 3),
-        "acc_cat": round((pred["categoria_pronosticada"].values == cat_real).mean(), 3),
+        "MAE": round(mae(nota_test, pred["nota_esperada"]), 3),
+        "acc_cat": round(exactitud_categoria(cat_real, pred["categoria_pronosticada"]), 3),
         "conf_baja": round(pred["confianza_baja"].mean(), 3),
     }
 

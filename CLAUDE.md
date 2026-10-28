@@ -118,6 +118,9 @@ exam_score (0–100, con decimales), placement_status (Placed 83,6% / Not Placed
   Barrido de ρ: `python -m src.barrido_rho` → `data/output/barrido_rho_art1.csv`.
 - **ρ = 0,65 (D-13, 2026-10-28):** primer ρ con pureza ≥ 80% (81,4%), CR 0,109 y menor MAE (0,94/10).
   Explicado en `docs/Informe_avance_TFI.docx`, sección 6.3.
+- **Métricas (ISSUE-303/304, 2026-10-28):** `src/metrics.py` reúne pureza, CR, RR, MAE, acierto y varianza
+  por nodo; `python -m src.metrics` genera `data/output/predicciones_student.csv` y `metricas_student.csv`.
+  Con ρ = 0,65: 871 nodos, pureza 81,4%, MAE 0,935, acierto 47,4%. El barrido reutiliza estas funciones.
 - Las decisiones se registran también en `docs/Registro_de_decisiones.docx`.
 
 ## Pendientes
