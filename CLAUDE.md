@@ -115,7 +115,9 @@ exam_score (0–100, con decimales), placement_status (Placed 83,6% / Not Placed
   simulado el BIC tiene mínimo en K = 4 y ℛ ordena bien las 4 categorías (nota media 75,9 / 65,0 / 54,7 / 44,5).
 - **Codificación (D-12):** solo binaria posicional de 4 bits (20 bits por alumno). `src/encoder.py`,
   `src/art1.py` y `src/predictor.py` implementados. ρ = 0,65: pureza 81%, 871 nodos, MAE 0,94/10.
-  ρ final pendiente del barrido (ISSUE-103).
+  Barrido de ρ: `python -m src.barrido_rho` → `data/output/barrido_rho_art1.csv`.
+- **ρ = 0,65 (D-13, 2026-10-28):** primer ρ con pureza ≥ 80% (81,4%), CR 0,109 y menor MAE (0,94/10).
+  Explicado en `docs/Informe_avance_TFI.docx`, sección 6.3.
 - Las decisiones se registran también en `docs/Registro_de_decisiones.docx`.
 
 ## Pendientes

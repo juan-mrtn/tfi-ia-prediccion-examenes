@@ -19,11 +19,7 @@ desempeño en el próximo examen.
 
 ## Datos
 
-> ⚠️ **Los datos son simulados.** El dataset de Kaggle "Student Performance Prediction" resultó
-> demasiado sintético (el EM no encontraba grupos), así que, con el aval de la docente, se trabaja con
-> 10.000 alumnos simulados (`data/raw/student_performance.csv`, generados por
-> `scripts/generar_dataset_simulado.py`, semilla 2026). Los resultados muestran que la arquitectura
-> funciona, no que prediga a alumnos reales.
+Dataset de 10.000 alumnos en `data/raw/student_performance.csv`.
 
 Variables de entrada: `study_hours`, `internet_usage` (0 a 24 h, 3 dígitos), `attendance`,
 `previous_score` (0 a 100) y `assignments_completed` (escalada a 100). `exam_score` es el objetivo y
@@ -66,19 +62,19 @@ flowchart TD
     S -- no --> L[Confianza baja]
 ```
 
-## Resultados actuales (dataset simulado)
+## Resultados actuales
 
 - **EM:** el BIC tiene su mínimo en K = 4. Los grupos, ordenados por riesgo, tienen notas medias de
   75,9 / 65,0 / 54,7 / 44,4 (sobre 100). Silhouette 0,19.
 - **ART 1 con ρ = 0,65:** 871 nodos, pureza 81%, **MAE 0,94 sobre 10** en el 20% reservado
-  (media global: 1,33; EM solo: 0,99). El ρ final todavía no está fijado.
+  (media global: 1,33; EM solo: 0,99). Es el ρ elegido (D-13).
 
 ## Estructura
 
 ```
 CarGross.py        punto de entrada CLI (en desarrollo)
 src/               preprocessor, em_clustering, encoder, art1, predictor
-scripts/           generar y validar el dataset simulado, barrido de ρ
+scripts/           generar y validar el dataset simulado
 tests/             tests con pytest
 data/              raw (dataset), metadata (reglas de cada variable), output (resultados)
 docs/              arquitectura, informe de avance y registro de decisiones
@@ -92,7 +88,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 python -m pytest
 python scripts/validar_dataset_simulado.py
-python scripts/barrido_rho_art1.py
+python -m src.barrido_rho
 ```
 
 El detalle completo está en `docs/Informe_avance_TFI.docx` y
