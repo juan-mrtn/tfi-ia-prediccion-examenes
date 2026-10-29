@@ -75,16 +75,65 @@ flowchart TD
   (media global: 1,33; EM solo: 0,99). Es el ρ elegido (D-13). Acierto de categoría 57,2%.
 - **Dataset 2 con los mismos parámetros:** 394 nodos, pureza 84,6%, MAE 0,23 (media global: 0,29).
 
-## Estructura
+## Estructura del Proyecto
 
 ```
-CarGross.py        punto de entrada CLI
-src/               preprocessor, em_clustering, encoder, art1, predictor, metrics, barrido_rho,
-                   app_visual (app en el navegador)
-scripts/           generar y validar el dataset simulado
-tests/             tests con pytest
-data/              raw (dataset), metadata (reglas de cada variable), output (resultados)
-docs/              arquitectura, informe de avance, registro de decisiones y figuras
+tfi-ia-prediccion-examenes/
+├── CarGross.py                          # Punto de entrada único (CLI): train, eval, predict, sweep, demo
+├── requirements.txt                     # Dependencias de Python
+├── README.md                            # Este archivo: guía, manual de usuario y FAQ
+├── CLAUDE.md                            # Contexto del proyecto y registro corto de decisiones
+├── .gitignore                           # Archivos que no se versionan (venv, cachés, salidas)
+│
+├── src/                                 # Código del predictor
+│   ├── __init__.py                      # Marca src como paquete
+│   ├── preprocessor.py                  # Carga, chequeo de 24 hs, escalado a 100 y bins
+│   ├── em_clustering.py                 # EM (mezcla de gaussianas), elección de K y riesgo por autovector
+│   ├── encoder.py                       # Codificación binaria posicional de 4 bits
+│   ├── art1.py                          # Red ART 1 (Carpenter-Grossberg, Box 3 de Lau)
+│   ├── predictor.py                     # Nota esperada y categoría del próximo examen
+│   ├── metrics.py                       # Pipeline completo y métricas (pureza, MAE, acierto)
+│   ├── barrido_rho.py                   # Barrido del parámetro de vigilancia ρ
+│   ├── man_pages.py                     # Manual (man) que muestra la CLI ante errores
+│   └── app_visual.py                    # App visual con Streamlit
+│
+├── tests/                               # Tests con pytest
+│   ├── test_preprocessor.py             # Escalado, bins y chequeo de horas
+│   ├── test_em_math.py                  # Fórmulas del EM y métricas BIC/AIC
+│   ├── test_encoder.py                  # Codificación de 4 bits
+│   ├── test_art1_box3.py                # Algoritmo ART 1 según el Box 3
+│   ├── test_predictor.py                # Predicción de nota y categoría
+│   ├── test_metrics.py                  # Métricas del pipeline
+│   └── test_cli_man.py                  # CLI, códigos de salida y man
+│
+├── data/
+│   ├── raw/                             # Datasets de entrada
+│   │   ├── student_performance.csv      # Dataset 1: simulado, 10.000 alumnos
+│   │   └── StudentPerformanceFactors.csv  # Dataset 2: benchmark de Kaggle, 6.607 alumnos
+│   ├── metadata/                        # Reglas de cada variable (rango, tipo, escalado)
+│   │   ├── student_metadata.csv         # Metadatos del dataset 1
+│   │   └── factors_metadata.csv         # Metadatos del dataset 2
+│   ├── processed/                       # Datos intermedios (no se versionan)
+│   └── output/                          # Resultados: predicciones, métricas, barridos (CSV)
+│
+├── docs/                                # Documentación del TFI
+│   ├── Arquitectura_EM_ART1_TFI*.docx   # Documento de arquitectura y backlog
+│   ├── especificacion_arquitectura_em_art1.md  # Arquitectura en Markdown
+│   ├── Esquema_arquitectura_TFI.docx    # Esquema gráfico de la arquitectura
+│   ├── Informe_avance_TFI.docx          # Informe de avance
+│   ├── Informe_evaluativo_TFI.docx      # Informe evaluativo final
+│   ├── informe_evaluativo.md            # Informe evaluativo en Markdown
+│   ├── manual_de_referencia.md          # Manual de referencia (FAQ y REFERENCIAS)
+│   ├── Registro_de_decisiones.docx      # Decisiones del equipo (D-01 en adelante)
+│   ├── Glosario_TFI.docx                # Glosario de términos
+│   ├── Presentacion_TFI.pptx            # Presentación
+│   ├── guion_presentacion_ppt.md        # Guion de la presentación con audio
+│   ├── figuras_app/                     # Capturas de la app y de la CLI
+│   ├── figuras_esquema/                 # Figuras del esquema de arquitectura
+│   └── figuras_evaluativo/              # Gráficos del informe evaluativo
+│
+├── scripts/                             # Scripts auxiliares del dataset simulado
+└── assets/                              # Recursos varios
 ```
 
 ## Manual de usuario
