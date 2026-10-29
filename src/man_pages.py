@@ -75,6 +75,10 @@ CÓDIGOS DE SALIDA
 
     Ante cualquier error se muestra el motivo y este manual.
 
+    Para ver el código de la última ejecución:
+        PowerShell:  echo $LASTEXITCODE
+        bash:        echo $?
+
 VER TAMBIÉN
     python -m src.metrics, python -m src.barrido_rho,
     streamlit run src/app_visual.py, docs/Registro_de_decisiones.docx

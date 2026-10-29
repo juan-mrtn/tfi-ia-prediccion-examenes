@@ -106,3 +106,8 @@ def test_matriz_de_confusion_en_eval(tmp_path):
     main(["--mode", "eval", "-d", str(chico), "-m", METADATA, "-o", str(tmp_path)])
     matriz = pd.read_csv(tmp_path / "matriz_confusion_chico.csv")
     assert matriz.iloc[:, 1:].to_numpy().sum() == 60    # el 20% de 300
+
+
+def test_man_explica_como_ver_el_codigo(capsys):
+    main(["--man"])
+    assert "echo $LASTEXITCODE" in capsys.readouterr().out
