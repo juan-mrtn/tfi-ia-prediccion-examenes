@@ -155,7 +155,7 @@ de salida y `--rho` (entre 0 y 1, por defecto 0,65).
 
 Ante cualquier error muestra `ERROR: motivo` y el manual, y sale con un código: **0** bien,
 **2** opciones inválidas, **3** archivo inexistente, **4** datos inválidos (faltan columnas, vacíos),
-**1** inesperado.
+**1** inesperado. Para ver el código: `echo $LASTEXITCODE` en PowerShell o `echo $?` en bash.
 
 ### 4. Los dos datasets
 
@@ -193,7 +193,38 @@ el 98% de las notas está entre 6 y 8, así que casi todos los alumnos son Aprob
 El detalle completo (cómo funciona cada pestaña, qué significa cada métrica y cada gráfico) está en
 `docs/Informe_avance_TFI.docx`, secciones 7 y 8.
 
+## FAQ
+
+**¿Por qué combinar EM y ART 1 en vez de usar solo uno?**
+EM trabaja con números y da 4 perfiles ordenados por riesgo, pero son muy gruesos para dar una nota.
+ART 1 arma grupos finos de alumnos casi idénticos, pero no sabe qué grupo es bueno o malo. Juntos el
+MAE es 0,94, contra 0,99 con solo EM y 1,33 dando la nota promedio a todos.
+
+**Si se usa la nota del examen, ¿por qué es no supervisado?**
+Porque la nota no participa del agrupamiento: EM y ART 1 solo ven las 5 variables de entrada. Recién
+al final se anota en cada nodo la nota media de sus alumnos, como una etiqueta en una caja que ya existe.
+
+**¿Qué pasa si cambio ρ?**
+ρ es cuánto se tienen que parecer dos alumnos para compartir nodo. Con ρ = 0,30 hay 89 nodos que
+mezclan alumnos distintos (MAE 1,03); con 0,80 hay 2.221 nodos muy chicos (MAE 0,98). 0,65 da el mejor
+MAE (0,94). Probar: `python CarGross.py --mode eval --rho 0.70`.
+
+**¿Por qué mejorar un hábito a veces baja la nota esperada?**
+La red compara bits y el código binario no es ordinal: 7 (`0111`) y 8 (`1000`) no comparten ningún
+bit, así que el alumno puede saltar a otro nodo con otra nota media. Pasa en el 17,7% de los casos y
+está documentado como limitación (D-17).
+
+**¿Por qué el dataset 2 da MAE 0,23 y 98% de acierto?**
+Porque el 98% de sus notas está entre 6 y 8: dar el promedio a todos ya tiene MAE 0,29. Lo que vale es
+que el sistema baja de 0,29 a 0,23.
+
+**¿El sistema detecta alumnos que van a abandonar?**
+No. Solo predice la nota del próximo examen; por eso la categoría más baja se llama Desaprobado (D-20).
+
+Más preguntas, las limitaciones y las referencias están en
+[`docs/manual_de_referencia.md`](docs/manual_de_referencia.md).
+
 ## Equipo
 
-Acuña, Juan (líder) · Blanchet, Sofía · Parodi, Facundo · Pereyra, Lucrecia · Schell, Brian ·
-Viñuela, Tomás. Docentes: Dra. Daniela López De Luise y Prof. Alejandro Pérez.
+Estudiantes: Acuña, Juan · Blanchet, Sofía · Parodi, Facundo · Viñuela, Tomás. 
+Docentes: Dra. Daniela López De Luise y Prof. Alejandro Pérez.
