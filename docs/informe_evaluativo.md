@@ -1,6 +1,23 @@
 # Informe evaluativo (informe final)
 
-Borrador. Se completa al cerrar el proyecto.
+El informe completo está en **`docs/Informe_evaluativo_TFI.docx`** (corridas con ambos datasets,
+evaluación de cada etapa, alcance y limitaciones). Sus figuras están en `docs/figuras_evaluativo/`.
+
+## Resumen de las corridas (K = 4, ρ = 0,65, 20% reservado)
+
+| Métrica | Dataset 1 · simulado | Dataset 2 · Student Performance Factors |
+|---|---|---|
+| BIC con mínimo en K = 4 | Sí | No (sigue bajando hasta K = 7) |
+| Silhouette (meta ≥ 0,40) | 0,19 | 0,32 |
+| Nodos ART 1 / CR | 871 / 0,109 | 394 / 0,075 |
+| Pureza respecto de EM (meta ≥ 80%) | 81,4% | 84,6% |
+| MAE del sistema | 0,94 | 0,23 |
+| MAE prediciendo la media | 1,33 | 0,29 |
+| MAE usando solo EM | 0,99 | 0,24 |
+| Acierto de categoría | 57,2% | 98,0% |
+| Acierto diciendo siempre la más común | 43,0% | 98,0% |
+
+En el dataset 2 el 98% de los alumnos es Aprobado Regular, así que su acierto de categoría es trivial.
 
 ## Limitaciones
 
@@ -22,3 +39,5 @@ Causas:
 Es una limitación propia de la arquitectura (ART 1 con la codificación binaria que pide la cátedra),
 no un error del código. Se decidió mantener el modelo así. La diferencia suele estar dentro del error
 normal del modelo (MAE 0,94 sobre 10), pero cerca de un límite de categoría puede cambiarla.
+
+Las demás limitaciones están en la sección 7.2 de `docs/Informe_evaluativo_TFI.docx`.
