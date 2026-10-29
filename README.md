@@ -12,7 +12,7 @@ El algoritmo **EM** (mezcla de gaussianas) descubre perfiles de alumnos y una re
 | Promoción | > 8 |
 | Aprobado Regular | 6 a 8 |
 | Recuperatorio | 4 a 6 |
-| Riesgo Crítico | < 4 |
+| Desaprobado | < 4 |
 
 **Fuera de alcance:** alertas de deserción y recomendaciones pedagógicas. El sistema solo predice el
 desempeño en el próximo examen.

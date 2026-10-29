@@ -20,7 +20,7 @@ DATASET_POR_NUMERO = {"1": "student", "2": "factors"}
 # La demo usa las primeras filas del dataset 1 para terminar en pocos segundos.
 FILAS_DEMO = 2000
 
-CATEGORIAS = ["Promoción", "Aprobado Regular", "Recuperatorio", "Riesgo Crítico / Abandono"]
+CATEGORIAS = ["Promoción", "Aprobado Regular", "Recuperatorio", "Desaprobado"]
 
 
 class ErrorArgumentos(Exception):

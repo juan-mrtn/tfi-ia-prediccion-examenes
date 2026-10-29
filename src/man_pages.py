@@ -26,7 +26,7 @@ DESCRIPCIÓN
     en 20 bits (10 bins, 4 bits por variable) y entrena la red ART 1.
     La nota esperada (0 a 10) es la nota media del nodo que resuena.
     Categorías: Promoción (> 8), Aprobado Regular (6 a 8),
-    Recuperatorio (4 a 6), Riesgo Crítico (< 4).
+    Recuperatorio (4 a 6), Desaprobado (< 4).
     Toda la entrada y la salida es en archivos .csv.
 
 MODOS

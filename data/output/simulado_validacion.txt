@@ -45,7 +45,7 @@ exam_score
 Regular (6-8)          41.1
 Recuperatorio (4-6)    35.8
 Promoción (>8)         13.7
-Riesgo (<4)             9.5
+Desaprobado (<4)        9.5
 placement_status
 Placed        0.705
 Not Placed    0.295

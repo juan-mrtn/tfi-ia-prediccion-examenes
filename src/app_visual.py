@@ -151,7 +151,7 @@ def pestana_alumno(modelo):
         c3.metric("Nodo ART 1", int(fila["nodo_art1"]))
         st.caption("La nota esperada es el promedio de los alumnos del nodo y la categoría sale "
                    "de esa nota: Promoción > 8, Aprobado Regular 6 a 8, Recuperatorio 4 a 6, "
-                   f"Riesgo Crítico < 4. Perfil EM más común en el nodo: {fila['perfil_em_nodo']}.")
+                   f"Desaprobado < 4. Perfil EM más común en el nodo: {fila['perfil_em_nodo']}.")
         if fila["confianza_baja"]:
             st.info("Confianza baja: ningún nodo superó la vigilancia ρ. "
                     "Se usó el nodo más parecido.")

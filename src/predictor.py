@@ -16,7 +16,7 @@ def score_to_category(score_0_10: float) -> str:
         return "Aprobado Regular"
     if score_0_10 >= 4:
         return "Recuperatorio"
-    return "Riesgo Crítico / Abandono"
+    return "Desaprobado"
 
 
 class ExamPredictor:

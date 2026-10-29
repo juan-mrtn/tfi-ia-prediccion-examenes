@@ -9,11 +9,10 @@ Predictor no supervisado híbrido que estima, para un estudiante, la **nota espe
 
 - **EM** = algoritmo Expectation-Maximization (mezcla de gaussianas, GMM).
 - **ART 1** = red Carpenter-Grossberg 1 (Box 3, Clifford Lau, 1992).
-- Categorías: Promoción (ŷ > 8), Aprobado Regular (6–8), Recuperatorio (4–6), Riesgo Crítico (< 4).
+- Categorías: Promoción (ŷ > 8), Aprobado Regular (6–8), Recuperatorio (4–6), Desaprobado (< 4) (D-20).
 
 **Fuera de alcance (corrección de cátedra):** alertas de deserción, recomendaciones o intervenciones
-pedagógicas, y cualquier uso que no sea predecir el próximo examen. "Abandono" es solo el nombre de
-la categoría más baja; el sistema no predice deserción.
+pedagógicas, y cualquier uso que no sea predecir el próximo examen. El sistema no predice deserción.
 
 ## Equipo
 
@@ -127,7 +126,7 @@ exam_score (0–100, con decimales), placement_status (Placed 83,6% / Not Placed
   único que pide la cátedra). Reutiliza `entrenar_pipeline()` de `src/metrics.py`, así muestra los
   mismos resultados que `python -m src.metrics`.
 - **Categoría desde la nota (D-15, 2026-10-28, pedido de Juan):** `ExamPredictor.predict` calcula la
-  categoría con la nota esperada (Promoción > 8, Regular 6–8, Recuperatorio 4–6, Riesgo < 4). Antes
+  categoría con la nota esperada (Promoción > 8, Regular 6–8, Recuperatorio 4–6, Desaprobado < 4). Antes
   usaba el perfil EM más común del nodo y a veces no coincidía con la nota (7,78 → Recuperatorio).
   El perfil EM queda en la columna `perfil_em_nodo`. Acierto de categoría: 47,4% → 57,2%; MAE y
   pureza no cambian, así que D-13 sigue valiendo.
@@ -159,6 +158,11 @@ exam_score (0–100, con decimales), placement_status (Placed 83,6% / Not Placed
   alumnos del dataset 1 (~2,5 s). Errores: se muestra el motivo y el man (`src/man_pages.py`) y se sale
   con 2 (opciones), 3 (archivo), 4 (datos) o 1 (inesperado); nunca un traceback. Tests en
   `tests/test_cli_man.py`.
+- **Categoría "Desaprobado" (D-20, 2026-10-29, pedido de Juan):** la categoría más baja (nota < 4) se llama
+  "Desaprobado" en vez de "Riesgo Crítico / Abandono", en código, CSV de salida, app, CLI y documentos.
+  Los límites no cambian, así que las métricas tampoco. "Riesgo" sigue siendo el nombre del índice ℛ de
+  cada perfil EM (autovector). No se tocan los documentos originales de arquitectura
+  (`Arquitectura_EM_ART1_TFI*.docx`, `especificacion_arquitectura_em_art1.md`) ni el 1er avance.
 - Las decisiones se registran también en `docs/Registro_de_decisiones.docx`.
 
 ## Pendientes

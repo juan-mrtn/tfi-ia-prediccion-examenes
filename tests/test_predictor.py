@@ -11,7 +11,7 @@ X = np.array([[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 1, 1]], dtype=np.int8)
 def test_score_to_category_limits():
     assert [score_to_category(s) for s in (9, 8, 6, 5.9, 4, 3.9)] == [
         "Promoción", "Aprobado Regular", "Aprobado Regular",
-        "Recuperatorio", "Recuperatorio", "Riesgo Crítico / Abandono"]
+        "Recuperatorio", "Recuperatorio", "Desaprobado"]
 
 
 def test_calibrate_and_predict():
@@ -22,7 +22,7 @@ def test_calibrate_and_predict():
     out = pred.predict(X[[0, 2]])
     assert list(out["nota_esperada"]) == [8.5, 3.0]
     # La categoría sale de la nota esperada; el perfil EM del nodo va aparte.
-    assert list(out["categoria_pronosticada"]) == ["Promoción", "Riesgo Crítico / Abandono"]
+    assert list(out["categoria_pronosticada"]) == ["Promoción", "Desaprobado"]
     assert list(out["perfil_em_nodo"]) == ["A", "B"]
     assert not out["confianza_baja"].any()
 

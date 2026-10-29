@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.metrics import silhouette_score
 from sklearn.mixture import GaussianMixture
 
-CATEGORIES = ["Promoción", "Aprobado Regular", "Recuperatorio", "Riesgo Crítico / Abandono"]
+CATEGORIES = ["Promoción", "Aprobado Regular", "Recuperatorio", "Desaprobado"]
 EPSILON = 1e-9
 
 
