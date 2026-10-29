@@ -5,23 +5,27 @@ crea, qué tan puros son respecto de las clases EM y qué tan bien predice la no
 del 20% de alumnos que la red no vio.
 
 Uso (desde la carpeta raíz del proyecto):
-    python -m src.barrido_rho
+    python -m src.barrido_rho            dataset 1 (simulado)
+    python -m src.barrido_rho factors    dataset 2 (Student Performance Factors)
 
-Resultado: data/output/barrido_rho_art1.csv
+Resultado: data/output/barrido_rho_art1.csv (dataset 1) o barrido_rho_factors.csv
 """
+
+import sys
 
 import numpy as np
 import pandas as pd
 
 from src.art1 import CarpenterGrossbergNetwork
 from src.em_clustering import EMClusterer, academic_weights
-from src.metrics import binarizar, exactitud_categoria, mae, pureza, tasa_compresion, tasa_resets
+from src.metrics import (DATASETS, binarizar, exactitud_categoria, mae, pureza,
+                         tasa_compresion, tasa_resets)
 from src.predictor import ExamPredictor, score_to_category
 from src.preprocessor import DataPreprocessor
 
-DATASET = "data/raw/student_performance.csv"
-METADATA = "data/metadata/student_metadata.csv"
-SALIDA = "data/output/barrido_rho_art1.csv"
+# Archivo de salida de cada dataset (el del dataset 1 conserva su nombre original).
+SALIDAS = {"student": "data/output/barrido_rho_art1.csv",
+           "factors": "data/output/barrido_rho_factors.csv"}
 
 # Valores de ρ a probar: de 0,10 a 0,90 con paso 0,05 (17 valores).
 VALORES_RHO = np.round(np.arange(0.10, 0.91, 0.05), 2)
@@ -30,10 +34,14 @@ VALORES_RHO = np.round(np.arange(0.10, 0.91, 0.05), 2)
 MAX_NODOS = 3000
 
 
-def preparar_datos():
-    """Lee el dataset, aplica el chequeo de 24 hs y lo separa en 80% / 20%."""
-    prep = DataPreprocessor(METADATA)
-    datos = prep.validate_hourly_consistency(prep.load(DATASET))
+def preparar_datos(dataset="student", ruta_datos=None, ruta_metadata=None):
+    """Lee el dataset, aplica el chequeo de 24 hs y lo separa en 80% / 20%.
+
+    ruta_datos y ruta_metadata, si se pasan, reemplazan las rutas de DATASETS (CLI).
+    """
+    rutas = DATASETS[dataset]
+    prep = DataPreprocessor(ruta_metadata or rutas["metadata"])
+    datos = prep.validate_hourly_consistency(prep.load(ruta_datos or rutas["datos"]))
     entrenamiento, prueba = prep.train_test_split(datos)
     return prep, entrenamiento, prueba
 
@@ -76,17 +84,17 @@ def evaluar_rho(rho, X_train, X_test, cat_train, nota_train, nota_test):
     }
 
 
-def main():
-    prep, entrenamiento, prueba = preparar_datos()
-
+def barrer_rho(prep, entrenamiento, prueba):
+    """Prueba todos los valores de VALORES_RHO y devuelve una tabla con sus métricas."""
     cat_train = clases_em(prep, entrenamiento)
     X_train = binarizar(prep, entrenamiento)
     X_test = binarizar(prep, prueba)
 
     # Las notas se pasan a escala 0–10. Solo se usan para calibrar y evaluar,
     # nunca como entrada de la red.
-    nota_train = entrenamiento["exam_score"].values / 10
-    nota_test = prueba["exam_score"].values / 10
+    objetivo = prep.target_col
+    nota_train = entrenamiento[objetivo].clip(0, 100).values / 10
+    nota_test = prueba[objetivo].clip(0, 100).values / 10
 
     filas = []
     for rho in VALORES_RHO:
@@ -97,9 +105,17 @@ def main():
         print(f"rho = {rho:.2f}: {resultado['clusters']} nodos, "
               f"pureza {resultado['pureza_EM']:.1%}, MAE {resultado['MAE']:.2f}")
         filas.append(resultado)
+    return pd.DataFrame(filas)
 
-    pd.DataFrame(filas).to_csv(SALIDA, index=False)
-    print(f"Resultados guardados en {SALIDA}")
+
+def main():
+    dataset = sys.argv[1] if len(sys.argv) > 1 else "student"
+    if dataset not in DATASETS:
+        print(f"Dataset desconocido: {dataset}. Opciones: {', '.join(DATASETS)}")
+        sys.exit(2)
+    prep, entrenamiento, prueba = preparar_datos(dataset)
+    barrer_rho(prep, entrenamiento, prueba).to_csv(SALIDAS[dataset], index=False)
+    print(f"Resultados guardados en {SALIDAS[dataset]}")
 
 
 if __name__ == "__main__":

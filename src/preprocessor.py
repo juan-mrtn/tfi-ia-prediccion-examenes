@@ -9,7 +9,7 @@ METADATA_COLUMNS = ["variable", "rol", "tipo", "min", "max", "escalar_a_100", "b
 
 
 class DataPreprocessor:
-    """Prepara el dataset crudo según las reglas de student_metadata.csv.
+    """Prepara el dataset crudo según las reglas de su metadata (student_ o factors_metadata.csv).
 
     Decisiones aplicadas (ver docs/Registro_de_decisiones.docx):
         D-03: solo las variables con escalar_a_100 = si se llevan a base 100.
@@ -53,8 +53,18 @@ class DataPreprocessor:
         return df
 
     def validate_hourly_consistency(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Descarta los registros con sleep_hours + max(study_hours, internet_usage) > 24."""
-        total = df["sleep_hours"] + df[["study_hours", "internet_usage"]].max(axis=1)
+        """Descarta los registros cuyas horas diarias suman más de 24.
+
+        Se usan las variables con tipo = horas del metadata. Las de control (sueño)
+        se suman al máximo de las de entrada: en el dataset 1 queda
+        sleep_hours + max(study_hours, internet_usage) <= 24.
+        """
+        horas = self.metadata_df[self.metadata_df["tipo"] == "horas"]
+        control = list(horas.index[horas["rol"] == "control"])
+        otras = list(horas.index[horas["rol"] != "control"])
+        total = df[control].sum(axis=1) if control else pd.Series(0, index=df.index)
+        if otras:
+            total = total + df[otras].max(axis=1)
         valid = total <= 24
         self.invalid_rows_ = int((~valid).sum())
         return df[valid].reset_index(drop=True)

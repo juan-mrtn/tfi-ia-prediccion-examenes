@@ -34,7 +34,8 @@ Docentes: Dra. Daniela López De Luise, Prof. Alejandro Pérez. UADER, FCyT, IDT
 - Punto de entrada único `CarGross.py`, CLI, PEP 8, sin warnings.
 - Entrada y salida solo en `.csv` (también metadatos).
 - Control total de excepciones: ante error se muestra el manual `man` y se sale con código controlado.
-- Dos datasets (≥ 50 filas, ≥ 5 variables): Kaggle "Student Performance Prediction" y un benchmark.
+- Dos datasets (≥ 50 filas, ≥ 5 variables): el simulado (D-10) y el benchmark Student Performance
+  Factors (D-18).
 - Entregables: manual de referencia (con FAQ y sección REFERENCIAS), informe final con carátula,
   guion de PPT con audio.
 
@@ -120,7 +121,44 @@ exam_score (0–100, con decimales), placement_status (Placed 83,6% / Not Placed
   Explicado en `docs/Informe_avance_TFI.docx`, sección 6.3.
 - **Métricas (ISSUE-303/304, 2026-10-28):** `src/metrics.py` reúne pureza, CR, RR, MAE, acierto y varianza
   por nodo; `python -m src.metrics` genera `data/output/predicciones_student.csv` y `metricas_student.csv`.
-  Con ρ = 0,65: 871 nodos, pureza 81,4%, MAE 0,935, acierto 47,4%. El barrido reutiliza estas funciones.
+  Con ρ = 0,65: 871 nodos, pureza 81,4%, MAE 0,935, acierto 57,2%. El barrido reutiliza estas funciones.
+- **App visual (D-14, 2026-10-28, Juan eligió):** `src/app_visual.py` con Streamlit, se ejecuta aparte con
+  `streamlit run src/app_visual.py`. Complementa a la CLI (CarGross.py sigue siendo el punto de entrada
+  único que pide la cátedra). Reutiliza `entrenar_pipeline()` de `src/metrics.py`, así muestra los
+  mismos resultados que `python -m src.metrics`.
+- **Categoría desde la nota (D-15, 2026-10-28, pedido de Juan):** `ExamPredictor.predict` calcula la
+  categoría con la nota esperada (Promoción > 8, Regular 6–8, Recuperatorio 4–6, Riesgo < 4). Antes
+  usaba el perfil EM más común del nodo y a veces no coincidía con la nota (7,78 → Recuperatorio).
+  El perfil EM queda en la columna `perfil_em_nodo`. Acierto de categoría: 47,4% → 57,2%; MAE y
+  pureza no cambian, así que D-13 sigue valiendo.
+- **Confianza baja (D-16, 2026-10-28):** si ningún nodo pasa la vigilancia, el predictor usa el nodo
+  que más unos del alumno cubre (‖T ∩ X‖/‖X‖) y, si empatan, el de más alumnos. Antes usaba el más
+  activado, que suele ser un nodo de 1 alumno (ej.: tareas 10 daba 4,70 y tareas 9 daba 6,16; ahora
+  5,88). En el 20% reservado pasa con 1 alumno, así que las métricas no cambian.
+  Limitación a explicar: el código binario posicional no es ordinal (0111 = 7 y 1000 = 8 no comparten
+  bits) y 399 de 847 nodos tienen menos de 5 alumnos, así que la nota no siempre sube con cada variable.
+- **Nota no monótona (D-17, 2026-10-28, Juan decidió):** se mantiene el modelo tal cual. En el 17,7% de
+  los casos mejorar una variable baja la nota más de 0,3 puntos (ART 1 compara bits, código no ordinal,
+  nodos chicos). Va como limitación en el informe de avance (secciones 6.4 y 8) y en
+  docs/informe_evaluativo.md. No proponer más alternativas para esto.
+- **Dataset 2 (D-18, 2026-10-28, Juan eligió):** Student Performance Factors (Kaggle,
+  `data/raw/StudentPerformanceFactors.csv`, 6.607 alumnos, sintético). Reglas en
+  `data/metadata/factors_metadata.csv`: Hours_Studied (horas por SEMANA, 0–44, escalada a 100),
+  Attendance, Sleep_Hours (horas, entra a la red), Tutoring_Sessions (0–8, escalada a 100),
+  Previous_Scores; objetivo Exam_Score (una nota de 101 se recorta a 100). Ningún dataset público tiene
+  las 5 variables del dataset 1. Mismo pipeline, K = 4 y ρ = 0,65: 394 nodos, pureza 84,6%, MAE 0,23
+  (nota promedio para todos: 0,29), acierto 98% pero el 98% de las notas es Aprobado Regular. BIC sin
+  mínimo hasta K = 7. Código: `DATASETS` en `src/metrics.py`; `python -m src.metrics factors`,
+  `python -m src.barrido_rho factors`; la app tiene un control "Dataset" arriba. El chequeo de 24 hs
+  ahora sale del metadata (variables tipo horas).
+- **CLI (D-19, 2026-10-28, ISSUE-301):** `CarGross.py` con `--mode train|eval|predict|sweep|demo`, datos con
+  `-d datos.csv -m metadata.csv` o el atajo `--dataset 1|2` (1 = simulado, por defecto), `-i` para los
+  alumnos nuevos de predict, `-o` carpeta (data/output) y `--rho` (0,65). Reutiliza `entrenar_pipeline()`
+  y `barrer_rho()`, así da los mismos números que `python -m src.metrics`. predict usa el modelo entrenado
+  con el 80%, como la app. eval agrega `matriz_confusion_<nombre>.csv`. demo = eval con los primeros 2000
+  alumnos del dataset 1 (~2,5 s). Errores: se muestra el motivo y el man (`src/man_pages.py`) y se sale
+  con 2 (opciones), 3 (archivo), 4 (datos) o 1 (inesperado); nunca un traceback. Tests en
+  `tests/test_cli_man.py`.
 - Las decisiones se registran también en `docs/Registro_de_decisiones.docx`.
 
 ## Pendientes
@@ -131,5 +169,4 @@ exam_score (0–100, con decimales), placement_status (Placed 83,6% / Not Placed
 - Confirmar con el docente que se acepta una sola variable de tareas para este dataset.
 - Actualizar el documento de arquitectura (sección 4.2, ISSUE-203) con la decisión de tareas.
 - Verificar si `previous_score` corresponde a materias comparables.
-- Elegir el dataset 2 (benchmark).
 - Repartir los roles del RACI y cargar los issues en GitHub.

@@ -71,3 +71,23 @@ def test_missing_column_raises(prep, tmp_path):
     pd.DataFrame([{"study_hours": 1}]).to_csv(path, index=False)
     with pytest.raises(ValueError):
         prep.load(str(path))
+
+
+def test_dataset_2_metadata():
+    prep2 = DataPreprocessor(str(ROOT / "data" / "metadata" / "factors_metadata.csv"))
+    assert prep2.feature_cols == ["Hours_Studied", "Attendance", "Sleep_Hours",
+                                  "Tutoring_Sessions", "Previous_Scores"]
+    assert prep2.target_col == "Exam_Score"
+    fila = pd.DataFrame([dict(Hours_Studied=22, Attendance=80, Sleep_Hours=7,
+                              Tutoring_Sessions=2, Previous_Scores=75, Exam_Score=67)])
+    out = prep2.scale_to_base_100_int(fila)
+    # Horas por semana (máx. 44) y tutorías (máx. 8) se escalan a 100; el resto no.
+    assert out.loc[0, "Hours_Studied"] == 50
+    assert out.loc[0, "Tutoring_Sessions"] == 25
+    assert out.loc[0, "Sleep_Hours"] == 7
+
+
+def test_dataset_2_hourly_check_uses_sleep_only():
+    prep2 = DataPreprocessor(str(ROOT / "data" / "metadata" / "factors_metadata.csv"))
+    df = pd.DataFrame({"Sleep_Hours": [8, 25], "Hours_Studied": [40, 40]})
+    assert len(prep2.validate_hourly_consistency(df)) == 1

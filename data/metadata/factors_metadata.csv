@@ -1,0 +1,7 @@
+variable,rol,tipo,min,max,escalar_a_100,binning,descripcion
+Hours_Studied,entrada,horas_semana,0,44,si,uniforme,Horas de estudio por semana
+Attendance,entrada,porcentaje,0,100,no,uniforme,Porcentaje de asistencia a clases
+Sleep_Hours,entrada,horas,0,24,no,horas,Horas diarias de sueño
+Tutoring_Sessions,entrada,conteo,0,8,si,uniforme,Tutorías por mes
+Previous_Scores,entrada,nota,0,100,no,uniforme,Nota previa
+Exam_Score,objetivo,nota,0,100,no,ninguno,Nota del examen (no entra a la red)
