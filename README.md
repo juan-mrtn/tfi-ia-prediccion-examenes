@@ -54,17 +54,27 @@ tareas      65   → bin 6 → 0110
 previa      62   → bin 6 → 0110
 ```
 
-Para un alumno nuevo, la red busca el nodo que resuena con su vector (sin aprender) y devuelve la nota
-media de ese nodo; la categoría sale de esa nota (D-15):
+**Cómo se predice un alumno nuevo.** Cada nodo de la red guarda un patrón de bits (su prototipo), que
+resume a los alumnos que aprendió. Para un alumno nuevo la red no aprende nada, solo compara:
+
+1. Se pasa el alumno a su vector de 20 bits.
+2. Se ordenan los nodos del más parecido al menos parecido y se prueba el primero.
+3. Se cuentan los bits en 1 del alumno y se mira qué parte de ellos también está en 1 en el prototipo
+   del nodo. Ejemplo: si el alumno tiene 10 unos y el nodo comparte 7, la coincidencia es 7/10 = 0,70.
+4. Si esa coincidencia supera el umbral ρ = 0,65, el nodo se parece lo suficiente: la nota esperada es
+   la nota media de los alumnos de ese nodo, y la categoría sale de esa nota (D-15).
+5. Si no la supera, se prueba el nodo siguiente.
+6. Si ningún nodo llega al umbral, se usa el que más unos del alumno comparte (si empatan, el que
+   tiene más alumnos) y la predicción se marca como de confianza baja (D-16).
 
 ```mermaid
 flowchart TD
-    X[Vector de 20 bits] --> N[Nodo de mayor activación]
-    N --> V{"‖T ∩ X‖ / ‖X‖ > ρ ?"}
-    V -- sí --> R[Resuena: nota y categoría del nodo]
-    V -- no --> S{¿Quedan nodos?}
-    S -- sí --> N
-    S -- no --> L[Confianza baja: nodo que más bits cubre, D-16]
+    X[Alumno nuevo: vector de 20 bits] --> N[Probar el nodo más parecido]
+    N --> V{"¿Comparte más del 65% de los unos del alumno?"}
+    V -- sí --> R[Nota media del nodo y su categoría]
+    V -- no --> S{¿Quedan nodos por probar?}
+    S -- sí --> N2[Probar el nodo siguiente] --> V
+    S -- no --> L[Usar el nodo que más unos comparte: confianza baja]
 ```
 
 ## Resultados actuales

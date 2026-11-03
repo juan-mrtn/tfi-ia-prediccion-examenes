@@ -27,3 +27,6 @@ Thumbs.db
 
 # Archivos temporales de Office
 ~$*
+
+# Contexto local para Claude (no se versiona)
+CLAUDE.md
