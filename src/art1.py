@@ -19,12 +19,13 @@ Pasos para cada alumno x:
 1. Elección: se calcula la activación de cada nodo, mu_j = b[j] · x.
    El nodo con mayor activación es el primer candidato.
 2. Vigilancia: se mide qué parte de los unos del alumno está también en el
-   prototipo: ||t[j] AND x|| / ||x||. Si es mayor que rho, el nodo "resuena"
-   (acepta al alumno). Si no, hay un "reset": se descarta ese nodo y se
-   prueba con el siguiente de mayor activación.
+   prototipo: ||t[j] AND x|| / ||x||. Si es mayor que rho, el nodo se parece
+   lo suficiente y acepta al alumno (en la bibliografía, "resonancia"). Si no,
+   hay un "reset": se descarta ese nodo y se prueba con el siguiente de mayor
+   activación.
 3. Aprendizaje (rápido): el nodo que aceptó al alumno se queda solo con los
    bits en común: t[j] = t[j] AND x, y b[j] = t[j] / (0.5 + ||t[j]||).
-4. Nodo nuevo: si ningún nodo resuena, se crea uno nuevo cuyo prototipo es
+4. Nodo nuevo: si ningún nodo acepta al alumno, se crea uno nuevo cuyo prototipo es
    el propio alumno.
 
 rho (vigilancia) controla qué tan exigente es la red: con rho alto pide
@@ -112,7 +113,7 @@ class CarpenterGrossbergNetwork:
 
         update=True: modo entrenamiento, la red aprende (y puede crear nodos).
         update=False: modo predicción, los pesos no cambian. Si ningún nodo
-        resuena, devuelve el de mayor activación con resonó = False.
+        pasa la vigilancia, devuelve el de mayor activación con resonó = False.
         Un vector sin unos no se puede evaluar: devuelve (-1, 0, False).
         """
         unos_x = int(x.sum())  # ||x||

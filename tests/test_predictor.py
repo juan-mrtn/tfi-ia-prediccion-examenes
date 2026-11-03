@@ -28,7 +28,7 @@ def test_calibrate_and_predict():
 
 
 def test_confianza_baja_usa_el_nodo_que_mas_cubre():
-    # Con rho alto, [1, 1, 1, 0] no resuena con ningún nodo. El nodo 0 cubre 2 de sus
+    # Con rho alto, [1, 1, 1, 0] no pasa la vigilancia de ningún nodo. El nodo 0 cubre 2 de sus
     # 3 unos y el nodo 1 solo 1: se usa el nodo 0 y no el más activado.
     net = CarpenterGrossbergNetwork(4, rho=0.9)
     labels = net.fit_predict(X)

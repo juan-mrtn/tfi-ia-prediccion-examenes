@@ -125,17 +125,22 @@ previous_score 62    → bin 6 → 0110
 vector que ve la red:  0110 0101 0110 0110 0110   (20 bits)
 ```
 
-**Paso 4, buscar el nodo que resuena.** La red prueba los nodos de mayor a menor activación hasta que
-uno pasa la prueba de vigilancia:
+**Paso 4, buscar un nodo que se parezca lo suficiente.** Cada nodo guarda un patrón de bits (su
+prototipo) que resume a los alumnos que aprendió. Para un alumno nuevo la red no aprende, solo compara.
+Prueba los nodos del más parecido al menos parecido y, para cada uno, cuenta los unos del alumno y mira
+qué parte de ellos también está en 1 en el prototipo. Si el alumno tiene 10 unos y el nodo comparte 7,
+la coincidencia es 7/10 = 0,70. Si supera el umbral ρ = 0,65, se usa ese nodo; si no, se prueba el
+siguiente. Si ningún nodo llega al umbral, se usa el que más unos del alumno comparte (si empatan, el
+que tiene más alumnos) y la predicción se marca como de confianza baja (D-16).
 
 ```mermaid
 flowchart TD
-    X["Vector X de 20 bits"] --> N["Nodo j de mayor activación"]
-    N --> V{"bits en común / bits de X  > ρ ?<br/>‖T ∩ X‖ / ‖X‖ > 0,65"}
-    V -- sí --> R["Resuena: se usa ese nodo"]
-    V -- no --> S{"¿Quedan nodos?"}
-    S -- sí --> N
-    S -- no --> L["Confianza baja (D-16):<br/>el nodo que más unos de X cubre"]
+    X["Alumno nuevo: vector de 20 bits"] --> N["Probar el nodo más parecido"]
+    N --> V{"¿Comparte más del 65%<br/>de los unos del alumno?"}
+    V -- sí --> R["Se usa ese nodo"]
+    V -- no --> S{"¿Quedan nodos por probar?"}
+    S -- sí --> N2["Probar el nodo siguiente"] --> V
+    S -- no --> L["Usar el nodo que más unos comparte:<br/>confianza baja (D-16)"]
 ```
 
 **Paso 5, respuesta.** Este alumno cae en el nodo 654, cuya nota media es **5,36**, así que la
