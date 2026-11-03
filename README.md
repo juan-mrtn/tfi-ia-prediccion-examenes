@@ -135,7 +135,7 @@ tfi-ia-prediccion-examenes/
 │   ├── informe_evaluativo.md            # Informe evaluativo en Markdown
 │   ├── manual_de_referencia.md          # Manual de referencia (FAQ y REFERENCIAS)
 │   ├── Registro_de_decisiones.docx      # Decisiones del equipo (D-01 en adelante)
-│   ├── Glosario_TFI.docx                # Glosario de términos
+│   ├── Glosario_TFI.docx                # Glosario por etapa (datos, EM, ART 1, métricas)
 │   ├── Presentacion_TFI.pptx            # Presentación
 │   ├── guion_presentacion_ppt.md        # Guion de la presentación con audio
 │   ├── figuras_app/                     # Capturas de la app y de la CLI
